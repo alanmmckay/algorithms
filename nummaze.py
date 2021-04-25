@@ -19,7 +19,7 @@ class Maze(object):
     def __init__(self):
         self.rows = 0
         self.matrix = []
-        self.pairs = []
+        self.coordinates = []
         
     def importFrom(self,fileName):
         try:
@@ -53,13 +53,14 @@ class Maze(object):
     def getMatrix(self):
         return self.matrix
     
-    def getPairs(self):
-        if not self.pairs:
+    def getCoordinates(self):
+        if not self.coordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
-                    #self.pairs.append((x+1,y+1,self.matrix[y][x]))
-                    self.pairs.append((x+1,y+1))
-        return self.pairs
+                    self.coordinates.append((x+1,y+1,self.matrix[y][x]))
+        return self.coordinates
+    
+    
             
 
 class Vertex(object):
@@ -162,5 +163,5 @@ class Graph(object):
 maze = Maze()
 maze.importFrom("SmallB.txt")
 print(maze.displayMatrix())
-pairs = maze.getPairs()
+pairs = maze.getCoordinates()
 print(pairs)
