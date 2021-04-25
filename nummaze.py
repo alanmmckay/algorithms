@@ -13,8 +13,20 @@ class Status(Enum):
                 return Status.FINISHED
         else:
             return False
-
-
+        
+class Directions(Enum):
+    UP = 1;
+    DOWN = 2;
+    LEFT = 3;
+    RIGHT = 4;
+    
+    def __iter__(self):
+        yield self.UP
+        yield self.DOWN
+        yield self.LEFT
+        yield self.RIGHT
+        
+        
 class Maze(object):
     def __init__(self):
         self.rows = 0
@@ -57,14 +69,52 @@ class Maze(object):
         if not self.coordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
-                    self.coordinates.append((x+1,y+1,self.matrix[y][x]))
+                    self.coordinates.append(((x+1,y+1),self.matrix[y][x]))
         return self.coordinates
     
+    def getCoordinate(self,pair):
+        for coordinate in self.coordinates:
+            if pair == coordinate[0]:
+                return coordinate
+        return False
     
-            
+    def traverseFrom(self,coordinate,direction):
+        if direction in Directions:
+            if direction == Directions.UP:
+                if coordinate[0][1]-coordinate[1] > 0:
+                    pair = (coordinate[0][0],coordinate[0][1]-coordinate[1])
+                else:
+                    return False
+            elif direction == Directions.DOWN:
+                if coordinate[0][1]+coordinate[1] <= self.rows:
+                    pair = (coordinate[0][0],coordinate[0][1]+coordinate[1])
+                else:
+                    return False
+            elif direction == Directions.LEFT:
+                if coordinate[0][0]-coordinate[1] > 0:
+                    pair = (coordinate[0][0]-coordinate[1],coordinate[0][1])
+                else:
+                    return False
+            elif direction == Directions.RIGHT:
+                if coordinate[0][0]+coordinate[1] <= self.rows:
+                    pair = (coordinate[0][0]+coordinate[1],coordinate[0][1])
+                else:
+                    return False
+            return self.getCoordinate(pair)
+        else:
+            return False
 
+    def traversalsFrom(self,coordinate):
+        paths = []
+        for direction in Directions:
+            path = self.traverseFrom(coordinate,direction)
+            if path:
+                paths.append(path)
+        return paths
+     
+            
 class Vertex(object):
-    def __init__(self,identifier ,label = None):
+    def __init__(self, identifier, label = None):
         self.identifier = identifier
         self.label = label
         self.inNeighbors = []
@@ -165,3 +215,6 @@ maze.importFrom("SmallB.txt")
 print(maze.displayMatrix())
 pairs = maze.getCoordinates()
 print(pairs)
+print(maze.traversalsFrom(pairs[0]))
+
+
