@@ -1,6 +1,7 @@
 from enum import Enum
 import sys
-sys.setrecursionlimit(10**6)
+import time
+sys.setrecursionlimit(10**6) #this is always a good sign...
 
 class Status(Enum):
     NEW = 1;
@@ -276,42 +277,29 @@ class Maze(object):
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
         dfsQueue = [source]
-        active = []
+        #active = []
+        active = dict()
+        for coordinate in self.coordinates:
+            active[str(coordinate)] = Status.NEW
         while dfsQueue:
             #info = dfsQueue.pop()
             info = dfsQueue[0]
-            print(info[2])
             dfsQueue = dfsQueue[1:]
             #print(info)
             #print(dfsQueue)
             #print()
             coordinate = (info[0],info[1])
-            active.append(coordinate)
+            #active.append(coordinate)
+            active[str(coordinate)] = Status.ACTIVE
             neighbors = self.traversalsFrom(coordinate)
             for neighbor in neighbors:
-                if neighbor not in active:
-                    active.append(neighbor)
+                if active[str(neighbor)] == Status.NEW:
+                    #active.append(neighbor)
+                    active[str(neighbor)] = Status.ACTIVE
                     dfsQueue.append((neighbor[0],neighbor[1],info[2]+1))
                     if neighbor == destinationCoordinate:
                         return (neighbor[0],neighbor[1],info[2] + 1)
                     
-                    
-    '''def findRoute(self,sourceCoordinate,destinationCoordinate):
-        self.graph = Graph()
-        self.startingVertex = self.graph.createVertex(sourceCoordinate[0],self.sourceCoordinate[1])
-        dfsQueue = [self.startingVertex]
-        routeQueue = [self.startingVertex.getID()]
-        while dfsQueue:
-            vertex = dfsQueue.pop()
-            if vertex.getID() == destinationCoordinate:
-                return vertex.getClock() #perhaps move
-            else:
-                vertex.incrementStatus()
-                neighborCoordinates = self.traversalsFrom(vertex.getID())
-                for coordinate in neighborCoordinates():
-                    if neighbor.getStatus() == Status.NEW:
-                        dfsQueue.append(neighbor)
-        return False'''
         
             
     def getGraph(self):
@@ -325,19 +313,22 @@ class Maze(object):
     
    
         
-
+start = time.time()
 maze = Maze()
-maze.importFrom("testSmallA.txt")
+#maze.importFrom("testSmallA.txt")
 #maze.importFrom("SmallB.txt")
 #maze.importFrom("testMediumB.txt")
-#maze.importFrom("testLargeB.txt")
+maze.importFrom("testLargeB.txt")
 #maze.importFrom("mediumX.txt")
 print(len(maze.matrix[0]))
 #print(maze.displayMatrix())
 
 #maze.generateGraph()
-print(maze.callcount)
+#print(maze.callcount)
 maze.getCoordinates()
 print(maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1]))
 #print(maze.renderGraph())
+end = time.time()
+
+print(end-start)
 
