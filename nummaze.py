@@ -214,24 +214,11 @@ class Maze(object):
         return self.coordinates
     
     def getCoordinate(self,pair):
-        for coordinate in self.coordinates:
-            if pair == coordinate[0]:
-                return coordinate
-        return False
+        return (pair,self.matrix[pair[1]-1][pair[0]-1])
     
     def traverseFrom(self,coordinate,direction):
         if direction in Directions and coordinate[1] > 0:
-            if direction == Directions.UP:
-                if coordinate[0][1]-coordinate[1] > 0:
-                    pair = (coordinate[0][0],coordinate[0][1]-coordinate[1])
-                else:
-                    return False
-            elif direction == Directions.DOWN:
-                if coordinate[0][1]+coordinate[1] <= self.rows:
-                    pair = (coordinate[0][0],coordinate[0][1]+coordinate[1])
-                else:
-                    return False
-            elif direction == Directions.LEFT:
+            if direction == Directions.LEFT:
                 if coordinate[0][0]-coordinate[1] > 0:
                     pair = (coordinate[0][0]-coordinate[1],coordinate[0][1])
                 else:
@@ -239,6 +226,16 @@ class Maze(object):
             elif direction == Directions.RIGHT:
                 if coordinate[0][0]+coordinate[1] <= self.rows:
                     pair = (coordinate[0][0]+coordinate[1],coordinate[0][1])
+                else:
+                    return False
+            elif direction == Directions.UP:
+                if coordinate[0][1]-coordinate[1] > 0:
+                    pair = (coordinate[0][0],coordinate[0][1]-coordinate[1])
+                else:
+                    return False
+            elif direction == Directions.DOWN:
+                if coordinate[0][1]+coordinate[1] <= self.rows:
+                    pair = (coordinate[0][0],coordinate[0][1]+coordinate[1])
                 else:
                     return False
             return self.getCoordinate(pair)
@@ -277,26 +274,28 @@ class Maze(object):
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
         bfsQueue = [source]
+        
+        #build a dictionary to store status of each node
         status = dict()
         for coordinate in self.coordinates:
-            status[str(coordinate)] = Status.NEW
-        i = 0
+            status[coordinate] = Status.NEW
+            
+        queueIndex = 0
         queueLength = 1
-        while i < queueLength:
-            info = bfsQueue[i]
-            coordinate = (info[0],info[1])
-            status[str(coordinate)] = Status.ACTIVE
+        while queueIndex < queueLength:
+            node = bfsQueue[queueIndex]
+            coordinate = (node[0],node[1]) #(tuple, distance)
+            status[coordinate] = Status.ACTIVE
             neighbors = self.traversalsFrom(coordinate)
             for neighbor in neighbors:
-                if status[str(neighbor)] == Status.NEW:
-                    status[str(neighbor)] = Status.ACTIVE
-                    bfsQueue.append((neighbor[0],neighbor[1],info[2]+1))
+                if status[neighbor] == Status.NEW:
+                    status[neighbor] = Status.ACTIVE
+                    bfsQueue.append((neighbor[0],neighbor[1],node[2]+1))
                     queueLength = queueLength + 1
                     if neighbor == destinationCoordinate:
-                        return (neighbor[0],neighbor[1],info[2] + 1)
-            i = i + 1
+                        return (neighbor[0],neighbor[1],node[2] + 1)
+            queueIndex = queueIndex + 1
                     
-        
             
     def getGraph(self):
         return self.graph
@@ -312,17 +311,18 @@ class Maze(object):
 start = time.time()
 maze = Maze()
 #maze.importFrom("testSmallA.txt")
-#maze.importFrom("SmallB.txt")
-maze.importFrom("testMediumB.txt")
-#maze.importFrom("testLargeB.txt")
+print(maze.displayMatrix())
+maze.importFrom("testMediumA.txt")
+#maze.importFrom("testMediumB.txt")
+#maze.importFrom("testLargeA.txt")
 #maze.importFrom("mediumX.txt")
-print(len(maze.matrix[0]))
 #print(maze.displayMatrix())
 
-#maze.generateGraph()
+maze.generateGraph()
+#print(maze.renderGraph())
+
 maze.getCoordinates()
 print(maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1]))
-#print(maze.renderGraph())
 end = time.time()
 
 print(end-start)
