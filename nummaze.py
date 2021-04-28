@@ -157,7 +157,7 @@ class Graph(object):
             self.edge_str += ' [penwidth=1]\n'
         #vertex.incrementStatus()
         primer_str = 'digraph D {\n'+self.node_str+'\n'+self.edge_str+'}'
-        return primer_str + self.node_str + self.edge_str
+        return primer_str
     
 
 class Maze(object):
@@ -273,6 +273,29 @@ class Maze(object):
             self.graph.createEdge(vertex,self.graph.getVertex(neighbor[0]))
             
             
+    def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
+        source = (sourceCoordinate[0],sourceCoordinate[1],0)
+        dfsQueue = [source]
+        active = []
+        while dfsQueue:
+            #info = dfsQueue.pop()
+            info = dfsQueue[0]
+            print(info[2])
+            dfsQueue = dfsQueue[1:]
+            #print(info)
+            #print(dfsQueue)
+            #print()
+            coordinate = (info[0],info[1])
+            active.append(coordinate)
+            neighbors = self.traversalsFrom(coordinate)
+            for neighbor in neighbors:
+                if neighbor not in active:
+                    active.append(neighbor)
+                    dfsQueue.append((neighbor[0],neighbor[1],info[2]+1))
+                    if neighbor == destinationCoordinate:
+                        return (neighbor[0],neighbor[1],info[2] + 1)
+                    
+                    
     '''def findRoute(self,sourceCoordinate,destinationCoordinate):
         self.graph = Graph()
         self.startingVertex = self.graph.createVertex(sourceCoordinate[0],self.sourceCoordinate[1])
@@ -304,13 +327,17 @@ class Maze(object):
         
 
 maze = Maze()
-maze.importFrom("SmallB.txt")
+maze.importFrom("testSmallA.txt")
+#maze.importFrom("SmallB.txt")
+#maze.importFrom("testMediumB.txt")
+#maze.importFrom("testLargeB.txt")
 #maze.importFrom("mediumX.txt")
 print(len(maze.matrix[0]))
 #print(maze.displayMatrix())
 
-maze.generateGraph()
+#maze.generateGraph()
 print(maze.callcount)
-
+maze.getCoordinates()
+print(maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1]))
 #print(maze.renderGraph())
 
