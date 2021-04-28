@@ -276,29 +276,25 @@ class Maze(object):
             
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
-        dfsQueue = [source]
-        #active = []
-        active = dict()
+        bfsQueue = [source]
+        status = dict()
         for coordinate in self.coordinates:
-            active[str(coordinate)] = Status.NEW
-        while dfsQueue:
-            #info = dfsQueue.pop()
-            info = dfsQueue[0]
-            dfsQueue = dfsQueue[1:]
-            #print(info)
-            #print(dfsQueue)
-            #print()
+            status[str(coordinate)] = Status.NEW
+        i = 0
+        queueLength = 1
+        while i < queueLength:
+            info = bfsQueue[i]
             coordinate = (info[0],info[1])
-            #active.append(coordinate)
-            active[str(coordinate)] = Status.ACTIVE
+            status[str(coordinate)] = Status.ACTIVE
             neighbors = self.traversalsFrom(coordinate)
             for neighbor in neighbors:
-                if active[str(neighbor)] == Status.NEW:
-                    #active.append(neighbor)
-                    active[str(neighbor)] = Status.ACTIVE
-                    dfsQueue.append((neighbor[0],neighbor[1],info[2]+1))
+                if status[str(neighbor)] == Status.NEW:
+                    status[str(neighbor)] = Status.ACTIVE
+                    bfsQueue.append((neighbor[0],neighbor[1],info[2]+1))
+                    queueLength = queueLength + 1
                     if neighbor == destinationCoordinate:
                         return (neighbor[0],neighbor[1],info[2] + 1)
+            i = i + 1
                     
         
             
@@ -311,20 +307,19 @@ class Maze(object):
      
 
     
-   
+
         
 start = time.time()
 maze = Maze()
 #maze.importFrom("testSmallA.txt")
 #maze.importFrom("SmallB.txt")
-#maze.importFrom("testMediumB.txt")
-maze.importFrom("testLargeB.txt")
+maze.importFrom("testMediumB.txt")
+#maze.importFrom("testLargeB.txt")
 #maze.importFrom("mediumX.txt")
 print(len(maze.matrix[0]))
 #print(maze.displayMatrix())
 
 #maze.generateGraph()
-#print(maze.callcount)
 maze.getCoordinates()
 print(maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1]))
 #print(maze.renderGraph())
