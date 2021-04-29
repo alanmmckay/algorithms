@@ -4,7 +4,26 @@ from helpers import *
 import sys
 import time
 sys.setrecursionlimit(10**6) #this is always a good sign...
-      
+  
+class MazeCoordinate(object):
+    def __init__(self,pair,distance):
+        self.pair = pair
+        self.distance = distance
+        self.x = pair[0]
+        self.y = pair[1]
+        
+    def getX(self):
+        return self.x
+    
+    def getY(self):
+        return self.y
+    
+    def getDistance(self):
+        return self.distance
+    
+    def getPair(self):
+        return self.pair
+  
 class Maze(object):
     def __init__(self):
         self.rows = 0
