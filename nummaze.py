@@ -1,170 +1,19 @@
-from enum import Enum
+from vertex import Vertex
+from graph import Graph
+from helpers import *
 import sys
 import time
 sys.setrecursionlimit(10**6) #this is always a good sign...
-
-class Status(Enum):
-    NEW = 1;
-    ACTIVE = 2;
-    FINISHED = 3;
-    
-    def __add__(self,val):
-        if val == 1:
-            if self == Status.NEW:
-                return Status.ACTIVE
-            else:
-                return Status.FINISHED
-        else:
-            return False
-        
-        
-class Directions(Enum):
-    UP = 1;
-    DOWN = 2;
-    LEFT = 3;
-    RIGHT = 4;
-    
-    def __iter__(self):
-        yield self.UP
-        yield self.DOWN
-        yield self.LEFT
-        yield self.RIGHT
-        
-            
-class Vertex(object):
-    def __init__(self,identifier,label = None):
-        self.identifier = identifier
-        self.label = label
-        self.inNeighbors = []
-        self.outNeighbors = []
-        self.status = Status.NEW
-        self.clock = 0
-        
-    def getID(self):
-        return self.identifier
-    
-    def getLabel(self):
-        return self.label
-    
-    def setLabel(self,label):
-        self.label = label
-        return True
-    
-    def getStatus(self):
-        return self.status
-    
-    def setStatus(self,status):
-        self.status = status
-        return True
-    
-    def incrementStatus(self):
-        if self.status == Status.FINISHED:
-            return False
-        else:
-            self.status = self.status + 1
-            return True
-    
-    def addInNeighbor(self,vertex):
-        if vertex not in self.inNeighbors:
-            self.inNeighbors.append(vertex)
-            return True
-        else:
-            return False
-    
-    def getInNeighbors(self):
-        return self.inNeighbors
-    
-    def addOutneighbor(self,vertex):
-        if vertex not in self.outNeighbors:
-            self.outNeighbors.append(vertex)
-            return True
-        else:
-            return False
-        
-    def getOutNeighbors(self):
-        return self.outNeighbors
-    
-    def setClock(self,time):
-        self.clock = time
-        return True
-    
-    def getClock(self):
-        return self.clock
-    
-
-class Graph(object):
-    def __init__(self):
-        self.vertices = []
-        self.vertexIds = []
-        self.edges = []
-        
-        self.graphQueue = []
-        self.edge_str = ""
-        self.node_str = ""
-    
-    def createVertex(self,identifier,label=None):
-        if identifier not in self.vertexIds:
-            vertex = Vertex(identifier,label)
-            self.vertices.append(vertex)
-            self.vertexIds.append(identifier)
-            return vertex
-        else:
-            return False
-    
-    def createEdge(self,vertexA,vertexB,weight = None):
-        if vertexA.getID() in self.vertexIds and vertexB.getID() in self.vertexIds:
-            edge = (vertexA,vertexB,weight)
-            if edge not in self.edges:
-                self.edges.append(edge)
-                vertexA.addOutneighbor(vertexB)
-                vertexB.addInNeighbor(vertexA)
-                return edge
-            else:
-                return False
-        else:
-            return False
-        
-    def getVertex(self,identifier):
-        for vertex in self.vertices:
-            if vertex.getID() == identifier:
-                return vertex
-        return False
-    
-    def getVertices(self):
-        return self.vertices
-    
-    def vertexCheck(self,identifier):
-        if identifier in vertexIds:
-            return True
-        else:
-            return False
-        
-    def renderGraph(self,vertex):
-        self.graphQueue = [vertex]
-        self.edge_str = ""
-        self.node_str = ""
-        return self.renderGraphDFS(vertex)
-    
-    def renderGraphDFS(self,vertex):
-        self.node_str += '"'+str(vertex.getID())+'"'
-        self.node_str += ' [label="'+str(vertex.getID())
-        self.node_str += '",shape=circle,fixedsize=true,fontsize=18,width=1]\n'
-        self.graphQueue.append(vertex)
-        #vertex.incrementStatus()
-        for outNeighbor in vertex.getOutNeighbors():
-            if outNeighbor not in self.graphQueue:
-                self.renderGraphDFS(outNeighbor)
-            self.edge_str += '"'+str(vertex.getID())+'" -> "' + str(outNeighbor.getID())+'"'
-            self.edge_str += ' [penwidth=1]\n'
-        #vertex.incrementStatus()
-        primer_str = 'digraph D {\n'+self.node_str+'\n'+self.edge_str+'}'
-        return primer_str
-    
-
+      
 class Maze(object):
     def __init__(self):
         self.rows = 0
         self.matrix = []
+        ''' ---
+            a coordinate is a tuple, where the first element is an x,y pair
+            and the second coordinate is the distance measure. Need to make
+            a class for this.
+        '''
         self.coordinates = []
         self.graph = Graph()
         self.startCoordinate = ()
@@ -174,6 +23,7 @@ class Maze(object):
         self.callcount = 0
         
     def importFrom(self,fileName):
+        
         try:
             f = open(fileName,'r')
             data = f.readlines()
@@ -207,6 +57,7 @@ class Maze(object):
         return self.matrix
     
     def getCoordinates(self):
+        #which processes are reliant on this
         if not self.coordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
@@ -214,8 +65,10 @@ class Maze(object):
         return self.coordinates
     
     def getCoordinate(self,pair):
+        #perhaps add try validation here
         return (pair,self.matrix[pair[1]-1][pair[0]-1])
     
+    #need to refactor the logic for valid input
     def traverseFrom(self,coordinate,direction):
         if direction in Directions and coordinate[1] > 0:
             if direction == Directions.LEFT:
@@ -289,13 +142,12 @@ class Maze(object):
             neighbors = self.traversalsFrom(coordinate)
             for neighbor in neighbors:
                 if status[neighbor] == Status.NEW:
-                    status[neighbor] = Status.ACTIVE
+                    status[neighbor] = status[neighbor] + 1
                     bfsQueue.append((neighbor[0],neighbor[1],node[2]+1))
                     queueLength = queueLength + 1
                     if neighbor == destinationCoordinate:
                         return (neighbor[0],neighbor[1],node[2] + 1)
             queueIndex = queueIndex + 1
-                    
             
     def getGraph(self):
         return self.graph
@@ -318,7 +170,7 @@ maze.importFrom("testMediumA.txt")
 #maze.importFrom("mediumX.txt")
 #print(maze.displayMatrix())
 
-maze.generateGraph()
+#maze.generateGraph()
 #print(maze.renderGraph())
 
 maze.getCoordinates()
