@@ -2,9 +2,9 @@ from vertex import Vertex
 from graph import Graph
 from helpers import *
 import sys
-import time
 sys.setrecursionlimit(10**6) #this is always a good sign...
-  
+
+''' #To be implemented:
 class MazeCoordinate(object):
     def __init__(self,pair,distance):
         self.pair = pair
@@ -23,6 +23,7 @@ class MazeCoordinate(object):
     
     def getPair(self):
         return self.pair
+'''
   
 class Maze(object):
     def __init__(self):
@@ -41,15 +42,7 @@ class Maze(object):
         self.graphQueue = []
         self.callcount = 0
         
-    def importFrom(self,fileName):
-        
-        try:
-            f = open(fileName,'r')
-            data = f.readlines()
-            f.close()
-        except:
-            #probably need to prime data here
-            print("Invalid filename!")
+    def importFrom(self,data):
         
         self.rows = int(data[0].split()[0])
         switch = False
@@ -87,6 +80,7 @@ class Maze(object):
         #perhaps add try validation here
         return (pair,self.matrix[pair[1]-1][pair[0]-1])
     
+inputStr = "Input Number Maze File Name (Include Extension; input q to quit): "
     #need to refactor the logic for valid input
     def traverseFrom(self,coordinate,direction):
         if direction in Directions and coordinate[1] > 0:
@@ -142,7 +136,6 @@ class Maze(object):
                 self.generateGraphDFS(newVertex)
             self.graph.createEdge(vertex,self.graph.getVertex(neighbor[0]))
             
-            
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
         bfsQueue = [source]
@@ -172,29 +165,5 @@ class Maze(object):
         return self.graph
     
     def renderGraph(self):
-        return self.graph.renderGraph(self.startVertex)
-        
-     
-
+        return self.graph.renderGraph(self.startVertex) 
     
-
-        
-start = time.time()
-maze = Maze()
-#maze.importFrom("testSmallA.txt")
-print(maze.displayMatrix())
-maze.importFrom("testMediumA.txt")
-#maze.importFrom("testMediumB.txt")
-#maze.importFrom("testLargeA.txt")
-#maze.importFrom("mediumX.txt")
-#print(maze.displayMatrix())
-
-#maze.generateGraph()
-#print(maze.renderGraph())
-
-maze.getCoordinates()
-print(maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1]))
-end = time.time()
-
-print(end-start)
-

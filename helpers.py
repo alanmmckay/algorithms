@@ -26,4 +26,13 @@ class Directions(Enum):
         yield self.DOWN
         yield self.LEFT
         yield self.RIGHT
-       
+        
+def textImport(fileName):
+    try:
+        f = open(fileName,'r')
+        data = f.readlines()
+        f.close()
+        return data
+    except:
+        return False
+    
