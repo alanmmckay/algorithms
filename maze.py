@@ -3,7 +3,7 @@ from graph import Graph
 from helpers import *
 import sys
 sys.setrecursionlimit(10**6) #this is always a good sign...
-
+  
 ''' #To be implemented:
 class MazeCoordinate(object):
     def __init__(self,pair,distance):
@@ -77,10 +77,8 @@ class Maze(object):
         return self.coordinates
     
     def getCoordinate(self,pair):
-        #perhaps add try validation here
         return (pair,self.matrix[pair[1]-1][pair[0]-1])
     
-inputStr = "Input Number Maze File Name (Include Extension; input q to quit): "
     #need to refactor the logic for valid input
     def traverseFrom(self,coordinate,direction):
         if direction in Directions and coordinate[1] > 0:
@@ -138,7 +136,7 @@ inputStr = "Input Number Maze File Name (Include Extension; input q to quit): "
             
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
-        bfsQueue = [source]
+        bfsQueue = [source] #(tuple,distance,clock)
         
         #build a dictionary to store status of each node
         status = dict()
@@ -152,7 +150,7 @@ inputStr = "Input Number Maze File Name (Include Extension; input q to quit): "
             coordinate = (node[0],node[1]) #(tuple, distance)
             status[coordinate] = Status.ACTIVE
             neighbors = self.traversalsFrom(coordinate)
-            for neighbor in neighbors:
+            for neighbor in neighbors: #(tuple,distance)
                 if status[neighbor] == Status.NEW:
                     status[neighbor] = status[neighbor] + 1
                     bfsQueue.append((neighbor[0],neighbor[1],node[2]+1))
