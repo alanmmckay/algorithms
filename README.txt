@@ -6,7 +6,7 @@ for the sake of practice, as a means to become acquainted with said programming
 language. Though there are some useful utilities, such as what currently exists
 within python_functions.
 
-Artificial Intelligence houses a set of assignments from my AI class. These
+artificial_intelligence houses a set of assignments from my AI class. These
 assignments explore breadth-first-search, genetic, and minimax search 
 algorithms.
 
