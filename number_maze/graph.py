@@ -67,4 +67,4 @@ class Graph(object):
             self.edge_str += ' [penwidth=1]\n'
         #vertex.incrementStatus()
         primer_str = 'digraph D {\n'+self.node_str+'\n'+self.edge_str+'}'
-        return primer_strMaze
+        return primer_str
