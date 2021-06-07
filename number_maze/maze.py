@@ -4,7 +4,7 @@ from helpers import *
 import sys
 sys.setrecursionlimit(10**6) #this is always a good sign...
   
-''' #To be implemented:
+
 class MazeCoordinate(object):
     def __init__(self,pair,distance):
         self.pair = pair
@@ -23,7 +23,13 @@ class MazeCoordinate(object):
     
     def getPair(self):
         return self.pair
-'''
+    
+    #This method is used to check to see if the coordinate exists in some queue
+    def __eq__(self,mazeCoordinate):
+        if type(mazeCoordinate) == MazeCoordinate:
+            return (mazeCoordinate.getPair(),mazeCoordinate.getDistance()) \
+                == (self.pair,self.distance)
+
   
 class Maze(object):
     def __init__(self):
