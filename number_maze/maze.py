@@ -30,7 +30,7 @@ class MazeCoordinate(object):
             return (mazeCoordinate.getPair(),mazeCoordinate.getDistance()) \
                 == (self.pair,self.distance)
         elif type(mazeCoordinate) == tuple and len(mazeCoordinate) == 2:
-            #could use more data validation, but probably isn't 100% neccessary
+            #could use more data validation, but probably isn't neccessary
             return (self.pair,self.distance) == mazeCoordinate
         else:
             return False
@@ -82,40 +82,43 @@ class Maze(object):
     
     def getCoordinates(self):
         #which processes are reliant on this
-        if not self.coordinates:
-        #if not self.mazeCoordinates:
+        #if not self.coordinates:
+        if not self.mazeCoordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
-                    self.coordinates.append(((x+1,y+1),self.matrix[y][x]))
-                    #self.mazeCoordinates.append( \
-                        #MazeCoordinate((x+1,y+1),self.matrix[y][x]))
-        return self.coordinates
-        #return self.mazeCoordinates
+                    #self.coordinates.append(((x+1,y+1),self.matrix[y][x]))
+                    self.mazeCoordinates.append( \
+                        MazeCoordinate((x+1,y+1),self.matrix[y][x]))
+        #return self.coordinates
+        return self.mazeCoordinates
     
     def getCoordinate(self,pair):
-        return (pair,self.matrix[pair[1]-1][pair[0]-1])
+        return MazeCoordinate(pair,self.matrix[pair[1]-1][pair[0]-1])
     
     #need to refactor the logic for valid input
     def traverseFrom(self,coordinate,direction):
-        if direction in Directions and coordinate[1] > 0:
+        distance = coordinate.getDistance()
+        x = coordinate.getX()
+        y = coordinate.getY()
+        if direction in Directions and distance > 0:
             if direction == Directions.LEFT:
-                if coordinate[0][0]-coordinate[1] > 0:
-                    pair = (coordinate[0][0]-coordinate[1],coordinate[0][1])
+                if x - distance > 0:
+                    pair = (x - distance, y)
                 else:
                     return False
             elif direction == Directions.RIGHT:
-                if coordinate[0][0]+coordinate[1] <= self.rows:
-                    pair = (coordinate[0][0]+coordinate[1],coordinate[0][1])
+                if x + distance <= self.rows:
+                    pair = (x + distance, y)
                 else:
                     return False
             elif direction == Directions.UP:
-                if coordinate[0][1]-coordinate[1] > 0:
-                    pair = (coordinate[0][0],coordinate[0][1]-coordinate[1])
+                if y - distance > 0:
+                    pair = (x, y - distance)
                 else:
                     return False
             elif direction == Directions.DOWN:
-                if coordinate[0][1]+coordinate[1] <= self.rows:
-                    pair = (coordinate[0][0],coordinate[0][1]+coordinate[1])
+                if y + distance <= self.rows:
+                    pair = (x, y + distance)
                 else:
                     return False
             return self.getCoordinate(pair)
@@ -133,24 +136,27 @@ class Maze(object):
     def generateGraph(self):
         #probably oughta refactor this for the sake of a name that makes sense:
         self.getCoordinates() #prime the coordinates object
-        self.startCoordinate = self.coordinates[0]
-        self.endCoordinate = self.coordinates[-1]
+        self.startCoordinate = self.mazeCoordinates[0]
+        self.endCoordinate = self.mazeCoordinates[-1]
         self.graphQueue = [self.startCoordinate]
-        self.startVertex = self.graph.createVertex(self.startCoordinate[0],self.startCoordinate[1])
+        self.startVertex = self.graph.createVertex( \
+            self.startCoordinate.getPair(),self.startCoordinate.getDistance())
         self.generateGraphDFS(self.startVertex)
         
     def generateGraphDFS(self,vertex):
         self.callcount = self.callcount + 1
-        coordinate = (vertex.getID(),vertex.getLabel())
+        coordinate = MazeCoordinate(vertex.getID(),vertex.getLabel())
         neighbors = self.traversalsFrom(coordinate)
         for neighbor in neighbors:
             if neighbor not in self.graphQueue:
-                newVertex = self.graph.createVertex(neighbor[0],neighbor[1])
+                newVertex = self.graph.createVertex( \
+                    neighbor.getPair(),neighbor.getDistance())
                 self.graphQueue.append(neighbor)
                 self.generateGraphDFS(newVertex)
-            self.graph.createEdge(vertex,self.graph.getVertex(neighbor[0]))
+            self.graph.createEdge(vertex, \
+                self.graph.getVertex(neighbor.getPair()))
             
-    def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
+    '''def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate[0],sourceCoordinate[1],0)
         bfsQueue = [source] #(tuple,distance,clock)
         
@@ -173,7 +179,7 @@ class Maze(object):
                     queueLength = queueLength + 1
                     if neighbor == destinationCoordinate:
                         return (neighbor[0],neighbor[1],node[2] + 1)
-            queueIndex = queueIndex + 1
+            queueIndex = queueIndex + 1'''
             
     def getGraph(self):
         return self.graph
@@ -181,3 +187,10 @@ class Maze(object):
     def renderGraph(self):
         return self.graph.renderGraph(self.startVertex) 
     
+data = textImport('testSmallA.txt')
+testMaze = Maze()
+testMaze.importFrom(data)
+testMaze.getCoordinates()
+testMaze.generateGraph()
+print(testMaze.renderGraph())
+#dot -Tps test.dot -o test.png
