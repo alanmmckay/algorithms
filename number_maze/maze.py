@@ -29,6 +29,11 @@ class MazeCoordinate(object):
         if type(mazeCoordinate) == MazeCoordinate:
             return (mazeCoordinate.getPair(),mazeCoordinate.getDistance()) \
                 == (self.pair,self.distance)
+        elif type(mazeCoordinate) == tuple and len(mazeCoordinate) == 2:
+            #could use more data validation, but probably isn't 100% neccessary
+            return (self.pair,self.distance) == mazeCoordinate
+        else:
+            return False
 
   
 class Maze(object):
@@ -41,6 +46,7 @@ class Maze(object):
             a class for this.
         '''
         self.coordinates = []
+        self.mazeCoordinates = []
         self.graph = Graph()
         self.startCoordinate = ()
         self.startVertex = Vertex(None)
@@ -77,10 +83,14 @@ class Maze(object):
     def getCoordinates(self):
         #which processes are reliant on this
         if not self.coordinates:
+        #if not self.mazeCoordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
                     self.coordinates.append(((x+1,y+1),self.matrix[y][x]))
+                    #self.mazeCoordinates.append( \
+                        #MazeCoordinate((x+1,y+1),self.matrix[y][x]))
         return self.coordinates
+        #return self.mazeCoordinates
     
     def getCoordinate(self,pair):
         return (pair,self.matrix[pair[1]-1][pair[0]-1])
