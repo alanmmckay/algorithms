@@ -11,7 +11,9 @@ while userInput != 'q':
         maze = Maze()
         maze.importFrom(data)
         maze.getCoordinates()
-        info = maze.lenShortestRoute(maze.coordinates[0],maze.coordinates[-1])
+        info = maze.lenShortestRoute(maze.mazeCoordinates[0],maze.mazeCoordinates[-1])
+        print('info:')
+        print(info)
         end = time.time()
         string = "Length of shortest path: "+str(info[2])+"\n"
         string += "Runtime: "+str(end-start)+" seconds\n"

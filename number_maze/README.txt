@@ -58,6 +58,10 @@ Feel free to take a look at those!
 
 -------------------------------------------------------------------------
 
+# !!! These runtimes likely have changed (for the worst) after the
+    MazeCoordinate object implementation. Note that they also were
+    gathered on an AMD A12 laptop processor.
+
 smallX.txt: Length: 9; Runtime: 4.47177 Milliseconds
 smallY.txt: Length: 7; Runtime: 1.62888 Milliseconds
 mediumX.txt: Length: 63; Rumtime: 139.69588 Milliseconds

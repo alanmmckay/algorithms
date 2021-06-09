@@ -156,41 +156,33 @@ class Maze(object):
             self.graph.createEdge(vertex, \
                 self.graph.getVertex(neighbor.getPair()))
             
-    '''def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
-        source = (sourceCoordinate[0],sourceCoordinate[1],0)
-        bfsQueue = [source] #(tuple,distance,clock)
-        
+    def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
+        source = (sourceCoordinate,0)
+        bfsQueue = [source] #(MazeCoordinate,clock)
+
         #build a dictionary to store status of each node
         status = dict()
-        for coordinate in self.coordinates:
-            status[coordinate] = Status.NEW
+        for coordinate in self.mazeCoordinates:
+            status[coordinate.getPair()] = Status.NEW
             
         queueIndex = 0
         queueLength = 1
         while queueIndex < queueLength:
-            node = bfsQueue[queueIndex]
-            coordinate = (node[0],node[1]) #(tuple, distance)
-            status[coordinate] = Status.ACTIVE
-            neighbors = self.traversalsFrom(coordinate)
-            for neighbor in neighbors: #(tuple,distance)
-                if status[neighbor] == Status.NEW:
-                    status[neighbor] = status[neighbor] + 1
-                    bfsQueue.append((neighbor[0],neighbor[1],node[2]+1))
+            node = bfsQueue[queueIndex][0]
+            status[node.getPair()] = Status.ACTIVE
+            neighbors = self.traversalsFrom(node)
+            for neighbor in neighbors: #MazeCoordinate objects
+                pair = neighbor.getPair()
+                if status[pair] == Status.NEW:
+                    status[pair] = status[pair] + 1
+                    bfsQueue.append((neighbor,bfsQueue[queueIndex][1]+1))
                     queueLength = queueLength + 1
-                    if neighbor == destinationCoordinate:
-                        return (neighbor[0],neighbor[1],node[2] + 1)
-            queueIndex = queueIndex + 1'''
+                    if pair == destinationCoordinate.getPair():
+                        return (neighbor.getPair(),neighbor.getDistance(),bfsQueue[queueIndex][1] + 1)
+            queueIndex = queueIndex + 1
             
     def getGraph(self):
         return self.graph
     
     def renderGraph(self):
         return self.graph.renderGraph(self.startVertex) 
-    
-data = textImport('testSmallA.txt')
-testMaze = Maze()
-testMaze.importFrom(data)
-testMaze.getCoordinates()
-testMaze.generateGraph()
-print(testMaze.renderGraph())
-#dot -Tps test.dot -o test.png
