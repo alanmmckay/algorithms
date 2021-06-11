@@ -5,26 +5,30 @@ class Graph(object):
     def __init__(self):
         self.vertices = []
         self.vertexIds = []
+        self.vertexMap = dict()
         self.edges = []
-        
+        self.edgeMap = dict()
+
         self.graphQueue = []
         self.edge_str = ""
         self.node_str = ""
     
     def createVertex(self,identifier,label=None):
-        if identifier not in self.vertexIds:
+        if not self.vertexCheck(identifier):
             vertex = Vertex(identifier,label)
             self.vertices.append(vertex)
             self.vertexIds.append(identifier)
+            self.vertexMap[identifier] = vertex
             return vertex
         else:
             return False
     
     def createEdge(self,vertexA,vertexB,weight = None):
-        if vertexA.getID() in self.vertexIds and vertexB.getID() in self.vertexIds:
+        if self.vertexCheck(vertexA.getID()) and self.vertexCheck(vertexB.getID()):
             edge = (vertexA,vertexB,weight)
-            if edge not in self.edges:
+            if not self.edgeCheck(edge):
                 self.edges.append(edge)
+                #self.edgeMap[edge] = None
                 vertexA.addOutneighbor(vertexB)
                 vertexB.addInNeighbor(vertexA)
                 return edge
@@ -34,18 +38,26 @@ class Graph(object):
             return False
         
     def getVertex(self,identifier):
-        for vertex in self.vertices:
-            if vertex.getID() == identifier:
-                return vertex
-        return False
+        if self.vertexCheck(identifier):
+            return self.vertexMap[identifier]
+        else:
+            return False
     
     def getVertices(self):
         return self.vertices
     
     def vertexCheck(self,identifier):
-        if identifier in vertexIds:
+        try:
+            self.vertexMap[identifier]
             return True
-        else:
+        except:
+            return False
+
+    def edgeCheck(self,edge):
+        try:
+            self.edgeMap[edge]
+            return True
+        except:
             return False
         
     def renderGraph(self,vertex):
