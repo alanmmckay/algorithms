@@ -40,12 +40,6 @@ class Maze(object):
     def __init__(self):
         self.rows = 0
         self.matrix = []
-        ''' ---
-            a coordinate is a tuple, where the first element is an x,y pair
-            and the second coordinate is the distance measure. Need to make
-            a class for this.
-        '''
-        self.coordinates = []
         self.mazeCoordinates = []
         self.graph = Graph()
         self.startCoordinate = ()
@@ -81,15 +75,11 @@ class Maze(object):
         return self.matrix
     
     def getCoordinates(self):
-        #which processes are reliant on this
-        #if not self.coordinates:
         if not self.mazeCoordinates:
             for y in range(0,len(self.matrix)):
                 for x in range(0,len(self.matrix[y])):
-                    #self.coordinates.append(((x+1,y+1),self.matrix[y][x]))
                     self.mazeCoordinates.append( \
                         MazeCoordinate((x+1,y+1),self.matrix[y][x]))
-        #return self.coordinates
         return self.mazeCoordinates
     
     def getCoordinate(self,pair):
@@ -159,26 +149,41 @@ class Maze(object):
     def lenShortestRoute(self,sourceCoordinate,destinationCoordinate):
         source = (sourceCoordinate,0)
         bfsQueue = [source] #(MazeCoordinate,clock)
+        self.graph = Graph()
+        self.graph.createVertex(sourceCoordinate.getPair(), \
+            sourceCoordinate.getDistance())
 
         #build a dictionary to store status of each node
         status = dict()
         for coordinate in self.mazeCoordinates:
             status[coordinate.getPair()] = Status.NEW
-            
+
         queueIndex = 0
         queueLength = 1
         while queueIndex < queueLength:
-            node = bfsQueue[queueIndex][0]
-            status[node.getPair()] = Status.ACTIVE
-            neighbors = self.traversalsFrom(node)
+            #perhaps change variable name to coordinate:
+            coordinate = bfsQueue[queueIndex][0]
+            #parentVertex = self.graph.accessVertices(queueIndex)
+            status[coordinate.getPair()] = Status.ACTIVE
+            neighbors = self.traversalsFrom(coordinate)
             for neighbor in neighbors: #MazeCoordinate objects
                 pair = neighbor.getPair()
+                #childVertex = self.graph.createVertex(pair, \
+                    #neighbor.getDistance())
+                #if not childVertex:
+                    #childVertex = self.graph.getVertex(pair)
+                #self.graph.createEdge(parentVertex, childVertex)
                 if status[pair] == Status.NEW:
                     status[pair] = status[pair] + 1
                     bfsQueue.append((neighbor,bfsQueue[queueIndex][1]+1))
+                    #update vertex entry for whatever data object decided
+
                     queueLength = queueLength + 1
                     if pair == destinationCoordinate.getPair():
-                        return (neighbor.getPair(),neighbor.getDistance(),bfsQueue[queueIndex][1] + 1)
+                        #be sure to add this item to the bfsQueue and update
+                        #   vertex entry
+                        return (neighbor.getPair(),neighbor.getDistance(), \
+                            bfsQueue[queueIndex][1] + 1)
             queueIndex = queueIndex + 1
             
     def getGraph(self):
