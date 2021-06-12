@@ -8,6 +8,7 @@ class Vertex(object):
         self.outNeighbors = []
         self.status = Status.NEW
         self.clock = 0
+        self.parent = None
         
     def getID(self):
         return self.identifier
@@ -59,3 +60,10 @@ class Vertex(object):
     
     def getClock(self):
         return self.clock
+
+    def setParent(self,parent):
+        self.parent = parent
+        return True
+
+    def getParent(self):
+        return self.parent
