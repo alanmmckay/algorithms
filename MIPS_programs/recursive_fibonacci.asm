@@ -13,19 +13,29 @@
 # $ra stores the caller's return address
 
 .data
-result: .word 0
-argument: .word 7
+#result: .word 0
+#argument: .word 7
+output1: .asciiz "Input Fibonnaci value to solve: "
+output2: .asciiz "Result: "
 
 .text
 .globl main
 
 main:
-lw $a0, argument
-jal fib
-sw $v0, result
+la $a0, output1
+li $v0, 4
+syscall
+li $v0, 5
+syscall
+move $a0, $v0
 
+jal fib
+move $t0, $v0
 #print statement
-lw $a0, result
+la $a0, output2
+li $v0, 4
+syscall
+move $a0, $t0
 li $v0, 1
 syscall
 
