@@ -20,12 +20,12 @@ void destroy_IntegerStack( struct IntegerStack* obj){
 }
 
 
-int peek_IntegerStack(struct IntegerStack* s){
-    if( s -> size <= 0){
+int peek_IntegerStack(struct IntegerStack* this){
+    if( this -> size <= 0){
         printf("Error on IntegerStack peek: Stack has no elements!");
         exit(1);
     }
-    return s -> collection[s -> size - 1];
+    return this -> collection[this -> size - 1];
 }
 
 
@@ -39,20 +39,20 @@ void push_IntegerStack(struct IntegerStack* s, int new_item){
 }
 
 
-int pop_IntegerStack(struct IntegerStack* s){
-    if( s -> size <= 0){
+int pop_IntegerStack(struct IntegerStack* this){
+    if( this -> size <= 0){
         printf("Error on IntegerStack pop: Stack has no elements!");
         exit(1);
     }
-    s -> size = s -> size - 1;
-    return s -> collection[s -> size];
+    this -> size = this -> size - 1;
+    return this -> collection[this -> size];
 }
 
 
-void print_IntegerStack(struct IntegerStack* s){
+void print_IntegerStack(struct IntegerStack* this){
     printf("___ Bottom ___\n");
-    for(int i = 0; i < s -> size; i++){
-        printf("  %d \n",s -> collection[i]);
+    for(int i = 0; i < this -> size; i++){
+        printf("  %d \n",this -> collection[i]);
     }
     printf("___  Top   ___ \n");
 }
