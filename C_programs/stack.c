@@ -3,7 +3,7 @@
 
 
 struct IntegerStack{
-    int size;
+    int quantity;
     int limit;
     int *collection;
     void (*print)(struct IntegerStack*);
@@ -21,49 +21,48 @@ void destroy_IntegerStack( struct IntegerStack* obj){
 
 
 int peek_IntegerStack(struct IntegerStack* this){
-    if( this -> size <= 0){
+    if( this -> quantity <= 0){
         printf("Error on IntegerStack peek: Stack has no elements!");
         exit(1);
     }
-    return this -> collection[this -> size - 1];
+    return this -> collection[this -> quantity - 1];
 }
 
 
-void push_IntegerStack(struct IntegerStack* s, int new_item){
-    s -> collection[s -> size] = new_item;
-    s -> size = s -> size + 1;
-    if(s -> size == s -> limit - 1){
-        s -> limit = s -> limit * 2;
-        s -> collection = realloc(s -> collection, s -> limit);
+void push_IntegerStack(struct IntegerStack* this, int new_item){
+    this -> collection[this -> quantity] = new_item;
+    this -> quantity = this -> quantity + 1;
+    if(this -> quantity == this -> limit - 1){
+        // !!! Rework !!!
     }
 }
 
 
 int pop_IntegerStack(struct IntegerStack* this){
-    if( this -> size <= 0){
+    if( this -> quantity <= 0){
         printf("Error on IntegerStack pop: Stack has no elements!");
         exit(1);
     }
-    this -> size = this -> size - 1;
-    return this -> collection[this -> size];
+    this -> quantity = this -> quantity - 1;
+    return this -> collection[this -> quantity];
 }
 
 
 void print_IntegerStack(struct IntegerStack* this){
     printf("___ Bottom ___\n");
-    for(int i = 0; i < this -> size; i++){
+    for(int i = 0; i < this -> quantity; i++){
         printf("  %d \n",this -> collection[i]);
     }
     printf("___  Top   ___ \n");
 }
 
 
-struct IntegerStack* create_IntegerStack(int new_size){
-    struct IntegerStack* newStack = (struct IntegerStack*)malloc(new_size * sizeof( struct IntegerStack));
+struct IntegerStack* create_IntegerStack(int new_limit){
+    struct IntegerStack* newStack = (struct IntegerStack*)malloc(new_limit * sizeof(struct IntegerStack) );
     if (newStack){
-        newStack -> limit = new_size;
-        newStack -> size = 0;
-        newStack -> collection = (int*) malloc(new_size * sizeof(int));
+        newStack -> limit = new_limit;
+        newStack -> quantity = 0;
+        newStack -> collection = (int*)malloc(new_limit * sizeof(int));
         newStack -> print = print_IntegerStack;
         newStack -> peek = peek_IntegerStack;
         newStack -> pop = pop_IntegerStack;
@@ -84,21 +83,31 @@ int main(){
     //push_IntegerStack(test_stack,4);
     test_stack -> push(test_stack, 4);
     printf("Limit: %d \n",test_stack->limit);
-    printf("Size: %d \n",test_stack->size);
+    printf("Size: %d \n",test_stack->quantity);
     //push_IntegerStack(test_stack,20);
     test_stack -> push(test_stack, 20);
     printf("Limit: %d \n",test_stack->limit);
-    printf("Size: %d \n",test_stack->size);
+    printf("Size: %d \n",test_stack->quantity);
     printf("Peeking: %d \n",test_stack -> peek(test_stack) /*peek_IntegerStack(test_stack)*/);
 
     //push_IntegerStack(test_stack,30);
     test_stack -> push(test_stack, 30);
     printf("Limit: %d \n",test_stack->limit);
-    printf("Size: %d \n",test_stack->size);
+    printf("Size: %d \n",test_stack->quantity);
     //push_IntegerStack(test_stack,50);
     test_stack -> push(test_stack,50);
+    test_stack -> push(test_stack,51);
+    test_stack -> push(test_stack,52);
+    test_stack -> push(test_stack,53);
+    test_stack -> push(test_stack,54);
+    test_stack -> push(test_stack,55);
+    test_stack -> push(test_stack,56);
+    test_stack -> push(test_stack,57);
+    test_stack -> push(test_stack,58);
+    test_stack -> push(test_stack,59);
+    test_stack -> push(test_stack,60);
     printf("Limit: %d \n",test_stack->limit);
-    printf("Size: %d \n",test_stack->size);
+    printf("Size: %d \n",test_stack->quantity);
     //print_IntegerStack(test_stack);
     test_stack -> print(test_stack);
 
