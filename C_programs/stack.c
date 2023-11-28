@@ -54,11 +54,11 @@ int pop_IntegerStack(struct IntegerStack* this){
 
 
 void print_IntegerStack(struct IntegerStack* this){
-    printf("    ___ Bottom ___\n");
-    for(int i = 0; i < this -> quantity; i++){
+    printf("    ___  Top   ___ \n");
+    for(int i = this -> quantity - 1; i >= 0; i--){
         printf("      %d \n",this -> collection[i]);
     }
-    printf("    ___  Top   ___ \n");
+    printf("    ___ Bottom ___\n");
 }
 
 
