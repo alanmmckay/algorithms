@@ -13,7 +13,7 @@ struct IntegerStack{
 };
 
 
-void destroy_IntegerStack( struct IntegerStack* obj){
+void destroy_IntegerStack(struct IntegerStack* obj){
     if (obj){
         free(obj);
     }
@@ -25,16 +25,16 @@ int peek_IntegerStack(struct IntegerStack* this){
         printf("Error on IntegerStack peek: Stack has no elements!");
         exit(1);
     }
-    return this -> collection[this -> quantity - 1];
+    return this -> collection[ this -> quantity - 1];
 }
 
 
 void push_IntegerStack(struct IntegerStack* this, int new_item){
-    this -> collection[this -> quantity] = new_item;
-    this -> quantity = (this -> quantity) + 1;
-    if(this -> quantity == this -> limit){
-        this -> limit = (this -> limit) * 1.5;
-        int *new_array = (int*)calloc(this->limit, sizeof(int));
+    this -> collection[ this -> quantity] = new_item;
+    this -> quantity = ( this -> quantity) + 1;
+    if( this -> quantity == this -> limit){
+        this -> limit = ( this -> limit) * 1.5;
+        int *new_array = (int*)calloc( this->limit, sizeof(int));
         for(int i = 0; i < this->quantity; i++){
             new_array[i] = this -> collection[i];
         }
@@ -49,14 +49,14 @@ int pop_IntegerStack(struct IntegerStack* this){
         exit(1);
     }
     this -> quantity = this -> quantity - 1;
-    return this -> collection[this -> quantity];
+    return this -> collection[ this -> quantity];
 }
 
 
 void print_IntegerStack(struct IntegerStack* this){
     printf("    ___  Top   ___ \n");
     for(int i = this -> quantity - 1; i >= 0; i--){
-        printf("      %d \n",this -> collection[i]);
+        printf("      %d \n", this -> collection[i]);
     }
     printf("    ___ Bottom ___\n");
 }
@@ -78,16 +78,16 @@ struct IntegerStack* create_IntegerStack(int new_limit){
 
 void test_push(struct IntegerStack* stack, int val){
     printf("Push operation: \n");
-    printf("   pre-push-quantity: %d\n",stack->quantity);
-    printf("   pre-push-limit: %d\n",stack->limit);
-    stack -> push(stack,val);
+    printf("   pre-push-quantity: %d\n", stack -> quantity);
+    printf("   pre-push-limit: %d\n", stack -> limit);
+    stack -> push(stack, val);
     printf("\n");
     printf("   state of stack: \n");
     stack -> print(stack);
     printf("\n");
-    printf("   post-push-quantity: %d\n",stack->quantity);
-    printf("   post-push-limit: %d\n",stack->limit);
-    printf("   Space reserved for array: %lu\n",malloc_usable_size(stack -> collection));
+    printf("   post-push-quantity: %d\n", stack -> quantity);
+    printf("   post-push-limit: %d\n", stack -> limit);
+    printf("   Space reserved for array: %lu\n", malloc_usable_size( stack -> collection));
     printf("! end of push\n");
     printf("\n\n\n");
 
@@ -95,24 +95,24 @@ void test_push(struct IntegerStack* stack, int val){
 
 void test_pop(struct IntegerStack* stack){
     printf("Push operation: \n");
-    printf("   pre-push-quantity: %d\n",stack->quantity);
-    printf("   pre-push-limit: %d\n",stack->limit);
+    printf("   pre-push-quantity: %d\n", stack -> quantity);
+    printf("   pre-push-limit: %d\n", stack -> limit);
     printf("\n");
     int val = stack -> pop(stack);
     printf("   Value of pop operation: %d\n", val);
     printf("   state of stack: \n");
     stack -> print(stack);
     printf("\n");
-    printf("   post-push-quantity: %d\n",stack->quantity);
-    printf("   post-push-limit: %d\n",stack->limit);
-    printf("   Space reserved for array: %lu\n",malloc_usable_size(stack -> collection));
+    printf("   post-push-quantity: %d\n", stack -> quantity);
+    printf("   post-push-limit: %d\n", stack -> limit);
+    printf("   Space reserved for array: %lu\n", malloc_usable_size( stack -> collection));
     printf("! end of pop\n");
     printf("\n\n\n");
 }
 
 void test_peek(struct IntegerStack* stack){
     printf("Peek operation: \n");
-    printf("    Value on top: %d\n",stack -> peek(stack));
+    printf("    Value on top: %d\n", stack -> peek(stack));
     printf("! end of peek\n");
     printf("\n");
 }
@@ -136,7 +136,7 @@ int main(){
     test_push(test_stack,52);
     test_peek(test_stack);
 
-    printf("--- --- --- Intiating consecutive pop: \n");
+    printf("--- --- --- Intiating consecutive pops: \n");
     test_pop(test_stack);
     test_pop(test_stack);
     test_pop(test_stack);
