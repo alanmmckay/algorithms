@@ -2,6 +2,32 @@
 #include <stdio.h>
 #include <malloc.h> //for malloc_usable_size
 
+/* --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---*/
+/* stack.c is an implementation of a stack abstract datatype using an array as
+ * the collection object. This implementation uses dynamic memory allocation
+ * where the amount of memory allocated is based on the current quantity (size)
+ * of the stack. The multiplier used is defined within the push_IntegerStack
+ * function.
+ *
+ * This implementation is also an attempt at supplying basic object-oriented
+ * functionality. Method calling and attribute access is present here; an
+ * attempt at data encapsulation via the IntegerStack struct. This struct
+ * contains storage for a quantity and limit measure in addition to a pointer
+ * to an array that acts as the collection of items present. The remaining
+ * pointers are to functions that provide the stack its behavior and can be
+ * enacted upon as though they were object methods. I.e.,
+ *      stack -> pop(stack)
+ *      stack -> peek(stack)
+ *      stack -> push(stack,val)
+ *      stack -> print(stack)
+ * Where the first parameter to each of these methods allows for self-reference.
+ *
+ * The functions create_IntegerStack and destroy_IntegerStack act as a
+ * constructor and destructor, respecitvely. The set of test subroutines given
+ * in the main method of this file show this 'object' in use! */
+//- Alan McKay
+/* --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---*/
+
 struct IntegerStack{
     int quantity;
     int limit;
