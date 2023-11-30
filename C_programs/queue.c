@@ -23,8 +23,6 @@ void destroy_IntegerQueue(struct IntegerQueue* queue){
 }
 
 
-//   f&r
-// [ x x x x x x x x x x ]
 //   f       r
 // [ 3 5 6 7 0 x x x x x ]
 //             f       r
@@ -111,7 +109,7 @@ void print_IntegerQueue(struct IntegerQueue* this){
 }
 
 void print_collection(struct IntegerQueue* this){
-    printf("[ ");
+    printf("[ Begin Array |");
     for(int i = 0; i < this -> limit; i++){
         if(i == this -> front){
             printf("Front -> ");
@@ -121,7 +119,7 @@ void print_collection(struct IntegerQueue* this){
         }
         printf("%d | ", this -> collection[i]);
     }
-    printf(" ]\n\n");
+    printf(" End Array ]\n\n");
 }
 
 struct IntegerQueue* create_IntegerQueue(int new_limit){
@@ -151,6 +149,9 @@ void test_enqueue(struct IntegerQueue* queue, int val){
     printf("   state of queue: \n");
     queue -> print(queue);
     printf("\n");
+    printf("    state of collection: \n");
+    print_collection(queue);
+    printf("\n");
     printf("   post-enqueue-quantity: %d\n", queue -> quantity);
     printf("   post-enqueue-limit: %d\n", queue -> limit);
     printf("   Space reserved for array: %lu\n", malloc_usable_size( queue -> collection));
@@ -167,6 +168,9 @@ void test_dequeue(struct IntegerQueue* queue){
     printf("   Value of dequeue operation: %d\n", val);
     printf("   state of queue: \n");
     queue -> print(queue);
+    printf("\n");
+    printf("    state of collection: \n");
+    print_collection(queue);
     printf("\n");
     printf("   post-dequeue-quantity: %d\n", queue -> quantity);
     printf("   post-dequeue-limit: %d\n", queue -> limit);
@@ -186,69 +190,37 @@ int main(){
     struct IntegerQueue* test_queue = create_IntegerQueue(5);
     test_queue -> print(test_queue);
 
-    test_enqueue(test_queue,3);
-    test_enqueue(test_queue,10);
+    test_enqueue(test_queue, 10);
     test_peek(test_queue);
-    test_dequeue(test_queue);
-    test_enqueue(test_queue,12);
-    test_enqueue(test_queue,15);
-    print_collection(test_queue);
-    test_enqueue(test_queue,18);
-    test_enqueue(test_queue,21);
-    test_enqueue(test_queue,34);
-    test_enqueue(test_queue,42);
-    test_enqueue(test_queue,50);
-    test_enqueue(test_queue,51);
-    test_enqueue(test_queue,52);
+    test_enqueue(test_queue, 20);
     test_peek(test_queue);
-    print_collection(test_queue);
-    test_dequeue(test_queue);
-    print_collection(test_queue);
-    test_dequeue(test_queue);
-    print_collection(test_queue);
-    test_dequeue(test_queue);
-    test_enqueue(test_queue,53);
-    test_enqueue(test_queue,54);
-    test_enqueue(test_queue,55);
-    test_enqueue(test_queue,56);
-    print_collection(test_queue);
-    test_enqueue(test_queue,57);
-    print_collection(test_queue);
-    test_enqueue(test_queue,58);
-    print_collection(test_queue);
-    test_enqueue(test_queue,59);
-    print_collection(test_queue);
-    test_enqueue(test_queue,60);
-    print_collection(test_queue);
-    test_enqueue(test_queue,61);
-
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    test_dequeue(test_queue);
-    print_collection(test_queue);
-    test_dequeue(test_queue);
-    print_collection(test_queue);
-
-    test_enqueue(test_queue, 3);
-    print_collection(test_queue);
-    test_enqueue(test_queue,5);
-    print_collection(test_queue);
-    test_dequeue(test_queue);
-    print_collection(test_queue);
+    test_enqueue(test_queue, 30);
+    test_peek(test_queue);
+    test_enqueue(test_queue, 40);
     test_peek(test_queue);
 
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+
+
+    test_enqueue(test_queue, 10);
+    test_enqueue(test_queue, 20);
+    test_enqueue(test_queue, 30);
+
+    for(int i = 1; i <= 15; i++){
+        if(i % 2 == 0){
+            test_dequeue(test_queue);
+        }
+        test_enqueue(test_queue,i*10);
+    }
+
+    for(int i = 1; i <= 12; i ++){
+        test_dequeue(test_queue);
+    }
+
+    test_enqueue(test_queue,1);
+    test_enqueue(test_queue,2);
     destroy_IntegerQueue(test_queue);
     return 0;
 }
