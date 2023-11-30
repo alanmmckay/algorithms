@@ -14,6 +14,15 @@ struct IntegerQueue{
     int (*peek)(struct IntegerQueue*);
 };
 
+
+void destroy_IntegerQueue(struct IntegerQueue* queue){
+    if (queue){
+        free( queue -> collection);
+        free(queue);
+    }
+}
+
+
 //   f&r
 // [ x x x x x x x x x x ]
 //   f       r
@@ -28,6 +37,7 @@ struct IntegerQueue{
 // [ 2 3 5 6 4 2 3 4 5 6 ]
 //   r f                        f                 r
 // [ 2 3 5 6 4 2 3 4 6 5 ] -> [ 3 5 6 4 2 3 4 6 5 2 x x x x x x x x]
+
 
 int peek_IntegerQueue(struct IntegerQueue* this){
     if( this -> quantity <= 0){
@@ -211,5 +221,34 @@ int main(){
     test_enqueue(test_queue,60);
     print_collection(test_queue);
     test_enqueue(test_queue,61);
+
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    test_dequeue(test_queue);
+    print_collection(test_queue);
+    test_dequeue(test_queue);
+    print_collection(test_queue);
+
+    test_enqueue(test_queue, 3);
+    print_collection(test_queue);
+    test_enqueue(test_queue,5);
+    print_collection(test_queue);
+    test_dequeue(test_queue);
+    print_collection(test_queue);
+    test_peek(test_queue);
+
+    destroy_IntegerQueue(test_queue);
     return 0;
 }
